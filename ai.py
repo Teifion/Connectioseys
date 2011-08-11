@@ -1,10 +1,11 @@
 import time
+import random
 
-class Game_ai (object):
-    def __init__(self, game):
-        super(Game_ai, self).__init__()
-        self.game = game
-        self.move = (-1,-1)
+def new_ai(game_data, out_queue):
+    possible_moves = []
     
-    def make_move(self):
-        raise Exception("Not implimented")
+    for k, v in game_data.items():
+        if v == None:
+            possible_moves.append(k)
+    
+    out_queue.put(random.choice(possible_moves))
