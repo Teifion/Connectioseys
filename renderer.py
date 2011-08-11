@@ -63,6 +63,27 @@ class Renderer (object):
             elif v == 1:
                 self.surface.blit(self.resources['x'], r)
         
+        # Connections
+        self.connections = [((5,5), (8,8))]
+        for c1, c2 in self.connections:
+            for i in range(-1, 2):
+                j = 0 - i
+                
+                start_pos = (
+                    c1[0] * self.tile_size + self.counter_size/2 + self.counter_padding + i,
+                    c1[1] * self.tile_size + self.counter_size/2 + self.counter_padding + j,
+                )
+            
+                end_pos = (
+                    c2[0] * self.tile_size + self.counter_size/2 + self.counter_padding + i,
+                    c2[1] * self.tile_size + self.counter_size/2 + self.counter_padding + j,
+                )
+                
+                if self.tiles[c1] == 0:
+                    pygame.draw.line(self.surface, (200, 0, 100), start_pos, end_pos, 2)
+                else:
+                    pygame.draw.line(self.surface, (100, 100, 255), start_pos, end_pos, 2)
+        
         # Has a victory occurred?
         # font = pygame.font.SysFont("Helvetica", 48)
         # if self.game.victory == -1:

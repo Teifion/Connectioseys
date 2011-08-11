@@ -14,6 +14,7 @@ class GameEngine (renderer.Renderer):
         self._cycle_delay = 1/30
         
         self.ai_queue = multiprocessing.Queue()
+        self.connections = []
         
         self.player = 0
         
@@ -40,10 +41,10 @@ class GameEngine (renderer.Renderer):
             for y in range(self.rows):
                 self.tiles[(x,y)] = None
         
-        self.tiles[(6,5)] = 0
-        self.tiles[(6,6)] = 0
         self.tiles[(5,5)] = 1
-        self.tiles[(5,6)] = 1
+        self.tiles[(6,6)] = 1
+        self.tiles[(7,7)] = 1
+        self.tiles[(8,8)] = 1
     
     def new_ai(self):
         ai_proc = multiprocessing.Process(
@@ -83,13 +84,14 @@ class GameEngine (renderer.Renderer):
         if self.player == 1:
             self.new_ai()
         
+        self.build_connections()
         return True
     
     def tile_click(self, x, y):
         if self.player == 0:
             self.make_move(x,y)
                 
-
-            
+    def build_connections(self):
+        self.connections = []
         
         
