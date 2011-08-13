@@ -133,7 +133,7 @@ class GameEngine (renderer.Renderer):
             
             
             # Now down and to the left
-            if x > 2 and y < self.rows-1:
+            if x > 2 and y < self.rows-3:
                 tiles = [
                     self.tiles[(x-1, y+1)],
                     self.tiles[(x-2, y+2)],
