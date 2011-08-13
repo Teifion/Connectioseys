@@ -47,7 +47,7 @@ class GameEngine (renderer.Renderer):
     def new_ai(self):
         ai_proc = multiprocessing.Process(
             target = ai.new_ai,
-            args=(self.tiles, self.ai_queue)
+            args=(self.tiles, self.player, self.ai_queue)
         )
         
         ai_proc.start()
@@ -108,8 +108,8 @@ class GameEngine (renderer.Renderer):
         
         if self.player == 1:
             self.new_ai()
-        else:
-            self.new_ai()
+        # else:
+        #     self.new_ai()
         
         self.build_connections()
         self.test_for_end()
