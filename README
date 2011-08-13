@@ -1,4 +1,10 @@
-http://www.reddit.com/r/gaming/comments/jemsn/for_those_who_were_asking_for_a_sequel_to/
+Inspired by: http://www.reddit.com/r/gaming/comments/jemsn/for_those_who_were_asking_for_a_sequel_to/
+
+The AI is threaded (using multiprocessing) and also launched from a single function call
+making it easy to extend and adapt for your own uses or projects.
+
+This code is free for you to use, duplicate, extend and do with as you wish. I'd appreciate
+credit given if you do use the code but it's not required.
 
 The rules are:
 
