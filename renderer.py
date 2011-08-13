@@ -65,23 +65,42 @@ class Renderer (object):
         
         # Connections
         for c1, c2 in self.connections:
-            for i in range(-1, 2):
-                j = 0 - i
+            if (c1[0] + 3, c1[1] + 3) == c2 or (c2[0] + 3, c2[1] + 3) == c1:
+                for i in range(-1, 2):
+                    j = 0 - i
                 
-                start_pos = (
-                    c1[0] * self.tile_size + self.counter_size/2 + self.counter_padding + i + 3,
-                    c1[1] * self.tile_size + self.counter_size/2 + self.counter_padding + j + 3,
-                )
+                    start_pos = (
+                        c1[0] * self.tile_size + self.counter_size/2 + self.counter_padding + i + 3,
+                        c1[1] * self.tile_size + self.counter_size/2 + self.counter_padding + j + 3,
+                    )
             
-                end_pos = (
-                    c2[0] * self.tile_size + self.counter_size/2 + self.counter_padding + i - 3,
-                    c2[1] * self.tile_size + self.counter_size/2 + self.counter_padding + j - 3,
-                )
+                    end_pos = (
+                        c2[0] * self.tile_size + self.counter_size/2 + self.counter_padding + i - 3,
+                        c2[1] * self.tile_size + self.counter_size/2 + self.counter_padding + j - 3,
+                    )
                 
-                if self.tiles[c1] == 0:
-                    pygame.draw.line(self.surface, (200, 0, 100), start_pos, end_pos, 2)
-                else:
-                    pygame.draw.line(self.surface, (100, 100, 255), start_pos, end_pos, 2)
+                    if self.tiles[c1] == 0:
+                        pygame.draw.line(self.surface, (200, 0, 100), start_pos, end_pos, 2)
+                    else:
+                        pygame.draw.line(self.surface, (100, 100, 255), start_pos, end_pos, 2)
+            else:
+                for i in range(-1, 2):
+                    j = 0 - i
+                
+                    start_pos = (
+                        c1[0] * self.tile_size + self.counter_size/2 + self.counter_padding - i - 3,
+                        c1[1] * self.tile_size + self.counter_size/2 + self.counter_padding + j + 3,
+                    )
+            
+                    end_pos = (
+                        c2[0] * self.tile_size + self.counter_size/2 + self.counter_padding - i - 3,
+                        c2[1] * self.tile_size + self.counter_size/2 + self.counter_padding + j + 3,
+                    )
+                
+                    if self.tiles[c1] == 0:
+                        pygame.draw.line(self.surface, (200, 0, 100), start_pos, end_pos, 2)
+                    else:
+                        pygame.draw.line(self.surface, (100, 100, 255), start_pos, end_pos, 2)
         
         # Has a victory occurred?
         # font = pygame.font.SysFont("Helvetica", 48)

@@ -40,6 +40,17 @@ class GameEngine (renderer.Renderer):
         for x in range(self.columns):
             for y in range(self.rows):
                 self.tiles[(x,y)] = None
+        
+        self.tiles[(5,5)] = 1
+        self.tiles[(6,4)] = 1
+        self.tiles[(7,3)] = 1
+        self.tiles[(8,2)] = 1
+        
+        self.tiles[(2,2)] = 1
+        self.tiles[(3,3)] = 1
+        self.tiles[(4,4)] = 1
+        self.tiles[(5,5)] = 1
+        self.build_connections()
     
     def new_ai(self):
         ai_proc = multiprocessing.Process(
@@ -82,7 +93,6 @@ class GameEngine (renderer.Renderer):
             self.new_ai()
         
         self.build_connections()
-        print(self.connections)
         return True
     
     def tile_click(self, x, y):
