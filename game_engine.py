@@ -41,15 +41,9 @@ class GameEngine (renderer.Renderer):
             for y in range(self.rows):
                 self.tiles[(x,y)] = None
         
-        self.tiles[(5,5)] = 1
-        self.tiles[(6,4)] = 1
-        self.tiles[(7,3)] = 1
-        self.tiles[(8,2)] = 1
-        
-        self.tiles[(2,2)] = 1
-        self.tiles[(3,3)] = 1
-        self.tiles[(4,4)] = 1
-        self.tiles[(5,5)] = 1
+        self.tiles[(2,2)] = 0
+        self.tiles[(3,3)] = 0
+        self.tiles[(4,4)] = 0
         self.build_connections()
     
     def new_ai(self):
@@ -89,8 +83,6 @@ class GameEngine (renderer.Renderer):
         
         if self.player == 1:
             self.new_ai()
-        else:
-            self.new_ai()
         
         self.build_connections()
         return True
@@ -106,7 +98,7 @@ class GameEngine (renderer.Renderer):
         
         def _check(v, tiles, check_set):
             for t in tiles:
-                if t != v:
+                if self.tiles[t] != v:
                     return False
                 
                 if t in check_set:
@@ -116,47 +108,47 @@ class GameEngine (renderer.Renderer):
         
         # At the base level we want to get an end-node, if we don't
         # get an end node then we don't care, we'll catch it later
-        for k, v in self.tiles.items():
-            if v == None:
-                continue
-            
-            if k in tr_bl_connections and k in tl_br_connections:
-                continue
-            
-            x, y = k
-            
-            # First try looking up and to the left
-            if x > 2 and y > 2:
-                tiles = [
-                    self.tiles[(x-1, y-1)],
-                    self.tiles[(x-2, y-2)],
-                    self.tiles[(x-3, y-3)],
-                ]
-            
-                if _check(v, tiles, tl_br_connections):
-                    tl_br_connections.add(k)
-                    tl_br_connections.add((x-1, y-1))
-                    tl_br_connections.add((x-2, y-2))
-                    tl_br_connections.add((x-3, y-3))
+        for x in range(self.columns):
+            for y in range(self.rows):
+                v = self.tiles[(x,y)]
                 
-                    self.connections.append(((x-3, y-3), (x, y)))
+                if v == None:
+                    continue
             
+                if (x,y) in tr_bl_connections and (x,y) in tl_br_connections:
+                    continue
+                
+                # First try looking up and to the left
+                if x > 2 and y > 2:
+                    tiles = [
+                        (x-1, y-1),
+                        (x-2, y-2),
+                        (x-3, y-3),
+                    ]
             
-            # Now down and to the left
-            if x > 2 and y < self.rows-3:
-                tiles = [
-                    self.tiles[(x-1, y+1)],
-                    self.tiles[(x-2, y+2)],
-                    self.tiles[(x-3, y+3)],
-                ]
+                    if _check(v, tiles, tl_br_connections):
+                        tl_br_connections.add((x, y))
+                        tl_br_connections.add((x-1, y-1))
+                        tl_br_connections.add((x-2, y-2))
+                        tl_br_connections.add((x-3, y-3))
                 
-                if _check(v, tiles, tr_bl_connections):
-                    tr_bl_connections.add(k)
-                    tr_bl_connections.add((x-1, y+1))
-                    tr_bl_connections.add((x-2, y+2))
-                    tr_bl_connections.add((x-3, y+3))
+                        self.connections.append(((x-3, y-3), (x, y)))
+            
+                # Now down and to the left
+                if x > 2 and y < self.rows-3:
+                    tiles = [
+                        (x-1, y+1),
+                        (x-2, y+2),
+                        (x-3, y+3),
+                    ]
                 
-                    self.connections.append(((x-3, y+3), (x, y)))
+                    if _check(v, tiles, tr_bl_connections):
+                        tr_bl_connections.add((x, y))
+                        tr_bl_connections.add((x-1, y+1))
+                        tr_bl_connections.add((x-2, y+2))
+                        tr_bl_connections.add((x-3, y+3))
+                
+                        self.connections.append(((x-3, y+3), (x, y)))
                 
             
         
