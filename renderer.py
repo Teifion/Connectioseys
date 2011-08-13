@@ -64,19 +64,18 @@ class Renderer (object):
                 self.surface.blit(self.resources['x'], r)
         
         # Connections
-        self.connections = [((5,5), (8,8))]
         for c1, c2 in self.connections:
             for i in range(-1, 2):
                 j = 0 - i
                 
                 start_pos = (
-                    c1[0] * self.tile_size + self.counter_size/2 + self.counter_padding + i,
-                    c1[1] * self.tile_size + self.counter_size/2 + self.counter_padding + j,
+                    c1[0] * self.tile_size + self.counter_size/2 + self.counter_padding + i + 3,
+                    c1[1] * self.tile_size + self.counter_size/2 + self.counter_padding + j + 3,
                 )
             
                 end_pos = (
-                    c2[0] * self.tile_size + self.counter_size/2 + self.counter_padding + i,
-                    c2[1] * self.tile_size + self.counter_size/2 + self.counter_padding + j,
+                    c2[0] * self.tile_size + self.counter_size/2 + self.counter_padding + i - 3,
+                    c2[1] * self.tile_size + self.counter_size/2 + self.counter_padding + j - 3,
                 )
                 
                 if self.tiles[c1] == 0:

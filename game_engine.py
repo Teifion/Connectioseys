@@ -40,11 +40,6 @@ class GameEngine (renderer.Renderer):
         for x in range(self.columns):
             for y in range(self.rows):
                 self.tiles[(x,y)] = None
-        
-        self.tiles[(5,5)] = 1
-        self.tiles[(6,6)] = 1
-        self.tiles[(7,7)] = 1
-        self.tiles[(8,8)] = 1
     
     def new_ai(self):
         ai_proc = multiprocessing.Process(
@@ -83,8 +78,11 @@ class GameEngine (renderer.Renderer):
         
         if self.player == 1:
             self.new_ai()
+        else:
+            self.new_ai()
         
         self.build_connections()
+        print(self.connections)
         return True
     
     def tile_click(self, x, y):
@@ -93,5 +91,67 @@ class GameEngine (renderer.Renderer):
                 
     def build_connections(self):
         self.connections = []
+        tr_bl_connections = set()# Top right to bottom left
+        tl_br_connections = set()# Top left to bottom right
+        
+        def _check(v, tiles, check_set):
+            for t in tiles:
+                if t != v:
+                    return False
+                
+                if t in check_set:
+                    return False
+            
+            return True  
+        
+        # At the base level we want to get an end-node, if we don't
+        # get an end node then we don't care, we'll catch it later
+        for k, v in self.tiles.items():
+            if v == None:
+                continue
+            
+            if k in tr_bl_connections and k in tl_br_connections:
+                continue
+            
+            x, y = k
+            
+            # First try looking up and to the left
+            if x > 2 and y > 2:
+                tiles = [
+                    self.tiles[(x-1, y-1)],
+                    self.tiles[(x-2, y-2)],
+                    self.tiles[(x-3, y-3)],
+                ]
+            
+                if _check(v, tiles, tl_br_connections):
+                    tl_br_connections.add(k)
+                    tl_br_connections.add((x-1, y-1))
+                    tl_br_connections.add((x-2, y-2))
+                    tl_br_connections.add((x-3, y-3))
+                
+                    self.connections.append(((x-3, y-3), (x, y)))
+            
+            
+            # Now down and to the left
+            if x > 2 and y < self.rows-1:
+                tiles = [
+                    self.tiles[(x-1, y+1)],
+                    self.tiles[(x-2, y+2)],
+                    self.tiles[(x-3, y+3)],
+                ]
+                
+                if _check(v, tiles, tr_bl_connections):
+                    tr_bl_connections.add(k)
+                    tr_bl_connections.add((x-1, y+1))
+                    tr_bl_connections.add((x-2, y+2))
+                    tr_bl_connections.add((x-3, y+3))
+                
+                    self.connections.append(((x-3, y+3), (x, y)))
+                
+            
+        
+            
+        
+        
         
         
