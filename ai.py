@@ -8,4 +8,7 @@ def new_ai(game_data, out_queue):
         if v == None:
             possible_moves.append(k)
     
-    out_queue.put(random.choice(possible_moves))
+    if len(possible_moves) > 0:
+        out_queue.put(random.choice(possible_moves))
+    else:
+        out_queue.put(None)

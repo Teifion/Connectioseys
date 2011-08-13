@@ -10,11 +10,11 @@ class Renderer (object):
     counter_padding = 3
     tile_size = counter_size + (counter_padding * 2)
     
-    columns = 40
-    rows = 40
+    columns = 20
+    rows = 20
     
     window_width = tile_size * columns
-    window_height = tile_size * rows
+    window_height = tile_size * rows + 40
     
     def __init__(self):
         super(Renderer, self).__init__()
@@ -39,14 +39,24 @@ class Renderer (object):
         self.surface = pygame.display.set_mode((self.window_width, self.window_height))
         pygame.display.set_caption('Connectioseys')
     
+    def draw_text(self, text, surface, x, y, colour=(0,0,0), font_name="Helvetica", font_size=20):
+        font = pygame.font.SysFont(font_name, font_size)
+        
+        textobj = font.render(text, 1, colour)
+        textrect = textobj.get_rect()
+        textrect.topleft = (x, y)
+        surface.blit(textobj, textrect)
+    
     def redraw(self):
         if time.time() < self._next_redraw:
             return
         
         # First the board
-        self.surface.fill((100, 200, 100), pygame.Rect(0, 0, self.window_width, self.window_height))
+        self.surface.fill((100, 200, 100), pygame.Rect(0, 0, self.window_width, self.window_height-40))
+        self.surface.fill((255, 255, 255), pygame.Rect(0, self.window_height-40, self.window_width, 40))
         
         # Now the tiles
+        empties = 0
         for k, v in self.tiles.items():
             x, y = k
             
@@ -57,6 +67,7 @@ class Renderer (object):
             )
             
             if v == None:
+                empties += 1
                 continue
             elif v == 0:
                 self.surface.blit(self.resources['o'], r)
@@ -64,7 +75,15 @@ class Renderer (object):
                 self.surface.blit(self.resources['x'], r)
         
         # Connections
+        white_points = 0
+        black_points = 0
+        
         for c1, c2 in self.connections:
+            if self.tiles[c1] == 1:
+                black_points += 1
+            else:
+                white_points += 1
+            
             if (c1[0] + 3, c1[1] + 3) == c2 or (c2[0] + 3, c2[1] + 3) == c1:
                 for i in range(-1, 2):
                     j = 0 - i
@@ -102,14 +121,18 @@ class Renderer (object):
                     else:
                         pygame.draw.line(self.surface, (100, 100, 255), start_pos, end_pos, 2)
         
-        # Has a victory occurred?
-        # font = pygame.font.SysFont("Helvetica", 48)
-        # if self.game.victory == -1:
-        #     self.drawText("Stalemate", font, self.surface, 95, 10)
-        # if self.game.victory == 1:
-        #     self.drawText("Victory to White", font, self.surface, 38, 10)
-        # if self.game.victory == 2:
-        #     self.drawText("Victory to Black", font, self.surface, 39, 10)
+            
+        self.draw_text("White: {0} point{1}".format(
+            white_points, "" if white_points == 1 else "s"
+        ), self.surface, 20, self.window_height - 30)
+        
+        self.draw_text("Black: {0} point{1}".format(
+            black_points, "" if black_points == 1 else "s"
+        ), self.surface, 170, self.window_height - 30)
+        
+        self.draw_text("{0} empty tile{1}".format(
+            empties, "" if empties == 1 else "s"
+        ), self.surface, 320, self.window_height - 30)
         
         pygame.display.flip()
         self._next_redraw = time.time() + self._redraw_delay
@@ -117,6 +140,9 @@ class Renderer (object):
     def handle_keydown(self, event):
         self.keys_down[event.key] = time.time()
         self.test_for_keyboard_commands()
+        
+        if event.key == 32 and not self.in_game:
+            self.new_game()
 
     def handle_keyup(self, event):
         del(self.keys_down[event.key])
